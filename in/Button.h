@@ -4,7 +4,6 @@
 
 //#include "Arduino.h"
 #include "Esp.h"
-
 #include "Button.h"
 
 class Button
@@ -17,6 +16,8 @@ public:
   Button(String name, int attachTo) : pin(attachTo)
   {
   }
+
+  //~Button();
 
   void buttonSetup();
   bool IsButtonPress();

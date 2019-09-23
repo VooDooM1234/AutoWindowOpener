@@ -2,22 +2,38 @@
 
 //#include "Arduino.h"
 #include "Esp.h"
+//#include <list>
 
 #include "Button.h"
 #include "StepperControl.h"
+struct pins
+{
+  const int OnBoardLED = 2;
 
-const int OnBoardLED = 2;
+  const int OpenButton = D8;
+  const int CloseButton = D7;
+  const int DebugButton = D6;
 
-const int OpenButton = D8;
-const int CloseButton = D7;
-const int DebugButton = D6;
+  const int IR_Pin = D4;
 
-const byte OpenDirection = 0; //Clockwise
+  const int MotorPin_1 = D0;
+  const int MotorPin_2 = D1;
+  const int MotorPin_3 = D2;
+  const int MotorPin_4 = D3;
+};
+
+const int numButtons = 3;
+
+const byte OpenDirection = 0;  //Clockwise
 const byte CloseDirection = 1; //Counter Clockwise
 
-Button openButton = Button("Open", OpenButton);
-Button closeButton = Button("Close", CloseButton);
-Button debugButton = Button("Debug", DebugButton);
+//std::list<Button>::iterator buttons;
+
+Button openButton = Button("Open", pins.OpenButton);
+Button closeButton = Button("Close", pins.CloseButton);
+Button debugButton = Button("Debug", pins.DebugButton);
+
+IR_Control remoteSensor = IR_Control("Remote Control", pins.IR_Pin);
 
 StepperControl stepper = StepperControl();
 

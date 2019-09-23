@@ -3,7 +3,6 @@
 
 #include "Button.h"
 
-
 int state = HIGH;
 unsigned long buttonDownMs;
 

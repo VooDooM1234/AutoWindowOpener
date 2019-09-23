@@ -14,7 +14,7 @@ const int speed = 60;
 
 StepperControl::StepperControl();
 
-Stepper myStepper(stepsPerRevolution, D0, D1, D2, D3);
+Stepper myStepper(stepsPerRevolution, pins.MotorPin_1, pins.motorPin_2, pins.motorPin_3, pins.motorPin_4);
 
 void StepperControl::StepperSetup()
 {
