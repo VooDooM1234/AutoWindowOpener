@@ -6,7 +6,7 @@
 int state = HIGH;
 unsigned long buttonDownMs;
 
-Button::Button(String name, int attachTO);
+//Button::Button(String name, int attachTO);
 
 void Button::buttonSetup()
 {
