@@ -2,6 +2,12 @@
 #ifndef IR_Control_H
 #define IR_Control_H
 
+#include <interrupt.h>
+
+#include <boarddefs.h>
+#include <IRremote.h>
+#include <IRremoteInt.h>
+#include <ir_Lego_PF_BitStreamEncoder.h>
 
 #include "Esp.h"
 
@@ -10,8 +16,6 @@
 class IR_Control
 {
 private:
-int pin;
-String name;
 
 public:
     IR_Control(String name, int attachTo) : pin(attachTo)

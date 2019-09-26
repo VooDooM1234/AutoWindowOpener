@@ -4,7 +4,6 @@
 
 //#include "Arduino.h"
 #include "Esp.h"
-
 #include "Button.h"
 
 class Button
@@ -15,11 +14,11 @@ String name;
 
 public:
 // This maybe the problem - need to send pin data to the instance
-
   Button(String name, int attachTo) : pin(attachTo)
   {
-    
   }
+
+  //~Button();
 
   void buttonSetup();
   bool IsButtonPress();

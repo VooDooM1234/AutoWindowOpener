@@ -1,11 +1,12 @@
+//#include <avr/sleep.h>
+
+//#include "Arduino.h"
 #include "Esp.h"
 //#include <list>
 
 #include "Button.h"
 #include "StepperControl.h"
-#include "IR_Control.h"
-
-typedef struct pins
+struct pins
 {
   const int OnBoardLED = 2;
 
@@ -38,7 +39,7 @@ StepperControl stepper = StepperControl();
 
 void setup()
 {
-  pinMode(pins.OnBoardLED, OUTPUT);
+  pinMode(OnBoardLED, OUTPUT);
 
   openButton.buttonSetup();
   closeButton.buttonSetup();
