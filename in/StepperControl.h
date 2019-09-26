@@ -9,9 +9,14 @@
 
 class StepperControl
 {
-
+private:
+int pin;
+String name;
 public:
-    StepperControl(){}
+    StepperControl() 
+    {
+
+    }
 
     void StepperSetup();
     void StepperRun(byte direction);

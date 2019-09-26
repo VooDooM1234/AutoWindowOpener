@@ -6,11 +6,10 @@
                 "ARDUINO=10800"
             ],
             "includePath": [
+              
                 "C:\\Users\\haydenb\\Documents\\Arduino\\libraries\\IRremoteESP8266\\src",
                 "${workspaceFolder}",
                 "${workspaceRoot}",
-                "E:\\Arduino Projects\\libraries\\hardware\\tools\\avr\\avr\\include\\avr",
-                "E:\\Arduino Projects\\libraries\\IRremote",
                 "C:\\Users\\Hayden\\AppData\\Local\\Arduino15\\packages\\esp8266\\tools\\**",
                 "C:\\Users\\Hayden\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.5.2\\**",
                 "C:\\Program Files (x86)\\Arduino\\libraries\\Stepper\\src",
@@ -32,8 +31,12 @@
             "cStandard": "c11",
             "cppStandard": "c++17",
             "browse": {
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
+                "limitSymbolsToIncludedHeaders": false,
+                "databaseFilename": "",
+                "path": [
+                    "arduino_install_dir/hardware/tools/avr/avr/include",
+                    "${workspaceRoot}"
+                ]
             }
         }
     ],

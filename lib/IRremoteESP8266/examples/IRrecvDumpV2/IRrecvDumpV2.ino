@@ -30,7 +30,7 @@
 // ==================== start of TUNEABLE PARAMETERS ====================
 // An IR detector/demodulator is connected to GPIO pin 14
 // e.g. D5 on a NodeMCU board.
-const uint16_t kRecvPin = 14;
+const uint16_t kRecvPin = D5;
 
 // The Serial connection baud rate.
 // i.e. Status message will be sent to the PC at this baud rate.
