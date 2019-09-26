@@ -1,0 +1,25 @@
+* SpiceNetList
+* 
+* Exported from AutoWindowOpener.sch at 26/09/19 2:57 PM
+* 
+* EAGLE Version 9.5.0 Copyright (c) 1988-2019 Autodesk, Inc.
+* 
+.TEMP=25.000000
+* --------- .OPTIONS ---------
+* --------- .PARAMS ---------
+
+* --------- simulation ---------
+.print DC 
+.print AC 
+.print TRAN 
+.END
+
+
+
+
+
+
+
+
+
+
