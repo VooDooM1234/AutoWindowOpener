@@ -5,8 +5,6 @@
 
 #include <IRrecv.h>
 #include <IRremoteESP8266.h>
-#include <IRac.h>
-#include <IRutils.h>
 
 const uint8_t kTimeout = 15;
 const uint16_t kCaptureBufferSize = 1024;

@@ -2,28 +2,21 @@
     "configurations": [
         {
             "name": "Win32",
-            "defines": [
-                "ARDUINO=10800"
-            ],
             "includePath": [
+
               
                 "C:\\Users\\haydenb\\Documents\\Arduino\\libraries\\IRremoteESP8266\\src",
                 "${workspaceFolder}",
                 "${workspaceRoot}",
+
+                
+                "E:\\Arduino Projects\\libraries\\hardware\\tools\\avr\\avr\\include\\avr",
+                "E:\\Arduino Projects\\libraries\\IRremote",
+
                 "C:\\Users\\Hayden\\AppData\\Local\\Arduino15\\packages\\esp8266\\tools\\**",
                 "C:\\Users\\Hayden\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.5.2\\**",
-                "C:\\Program Files (x86)\\Arduino\\libraries\\Stepper\\src",
-                "C:\\Program Files (x86)\\Arduino\\tools\\**",
-                "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\**",
-                "C:\\Users\\haydenb\\AppData\\Local\\Arduino15\\packages\\esp8266\\tools\\**",
-                "C:\\Users\\haydenb\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.5.2\\**",
-                "C:\\Users\\haydenb\\Documents\\Arduino\\libraries\\IRremote",
-                "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\**",
-                "C:\\Program Files (x86)\\Arduino\\tools\\**",
-                "C:\\Program Files (x86)\\Arduino\\hardware\\tools\\**",
-                "C:\\Program Files (x86)\\Arduino\\libraries\\**",
-                "C:\\Users\\haydenb\\Documents\\Arduino\\hardware\\tools\\**",
-                "C:\\Users\\haydenb\\Documents\\Arduino\\libraries\\**"
+                "C:\\Program Files (x86)\\Arduino\\libraries\\Stepper\\src"
+               
             ],
             "forcedInclude": [],
             "intelliSenseMode": "msvc-x64",
@@ -42,3 +35,4 @@
     ],
     "version": 4
 }
+
