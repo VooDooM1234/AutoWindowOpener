@@ -16,10 +16,11 @@ public:
     IR_Control(String name, int attachTo) : pin(attachTo)
     {
     }
-    //String IR_ButtonCheck(String data);
+    String StepperState(String state);
     void IRSetup();
     int IR_Run();
     bool IRHasRecievedData();
+    
 };
 
 extern IR_Control IRControl;

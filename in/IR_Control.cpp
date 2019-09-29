@@ -4,6 +4,7 @@
 #include "StepperControl.h"
 
 #include <IRrecv.h>
+#include <IRutils.h>
 #include <IRremoteESP8266.h>
 
 const uint8_t kTimeout = 15;
@@ -11,6 +12,9 @@ const uint16_t kCaptureBufferSize = 1024;
 
 IRrecv irrecv(D5, kCaptureBufferSize, kTimeout, true);
 decode_results results;
+
+bool remoteState;
+unsigned long remoteButtonDownMs;
 
 //IR_Control::IR_Control(String name, int attachTo);
 
@@ -22,36 +26,54 @@ void IR_Control::IRSetup()
 int IR_Control::IR_Run()
 {
     String data = resultToHexidecimal(&results);
-    uint8_t remoteButton = null;
+    uint8_t remoteButton;
+    uint8_t holdCount = 0;
 
-   // if (data != "FFFFFFFFFFFFFFFF")
+    // if (data != "FFFFFFFFFFFFFFFF")
     //{
-        Serial.print("Data Recieved: ");
-        Serial.println(data);
+    Serial.print("Data Recieved: ");
+    Serial.println(data);
+    //OPEN
+    if (data == "2FDD827")
+    {
+        remoteButton = 0;
+        Serial.println("Remote Opening");
+    }
+    //CLOSE
+    else if (data == "2FDF807")
+    {
+        remoteButton = 1;
+        Serial.println("Remote Closing");
+    }
+    //returned when remote is being held
+    else if (data == "FFFFFFFFFFFFFFFF")
+    {
+        Serial.println("Holding");
+    }
 
-        if (data == "2FDD827")
-        {
-            remoteButton = 0;
-            Serial.println("Remote Opening");
-        }
-        else if (data == "2FDF807")
-        {
-            remoteButton = 1;
-            Serial.println("Remote Closing");
-        }
-
-        return remoteButton;
-   // }
+    return remoteButton;
+    // }
 }
 
 bool IR_Control::IRHasRecievedData()
 {
+    int prevState = remoteState;
+    remoteState = irrecv.decode(&results);
+//doesnot work - no idea what decode actyually returns
 
-    if (irrecv.decode(&results))
+    if (prevState == LOW && remoteState == HIGH)
     {
-        // Serial.println("IR Data Recieved");
+        remoteButtonDownMs = millis();
         return true;
     }
 
-    return false;
+    else if (prevState == HIGH && remoteState == HIGH)
+    {
+        if (millis() - remoteButtonDownMs < 50)
+        {
+            // ignore this for debounce
+            return false;
+        }
+        return false;
+    }
 }

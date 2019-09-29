@@ -3,37 +3,38 @@
 //#include "Arduino.h"
 #include "Esp.h"
 //#include <list>
-
+/*
+//  TO BE ADDED
+//  1.  ZEROING FOR MOTOR 
+//  2.  SLEEP MODE FOOR ESP
+//  3.  ONBOARD RTC
+//  4.  HOLDING REMOTE BUTTON 
+*/
 #include "Button.h"
 #include "StepperControl.h"
 #include "IR_Control.h"
 #include "StepperControl.h"
+#include "Pins.h"
 
-static const uint8_t OnBoardLED = 2;
-
-
-static const uint8_t OpenButton = D8;   //15 - d8
-static const uint8_t CloseButton = D7;  //13 - d7
-static const uint8_t DebugButton = D6;  //12 - d6
-
-static const uint8_t IR_Pin = D5;
-
-static const uint8_t numButtons = 3;
+static const int numButtons = 3;
 
 static const byte OpenDirection = 0;  //Clockwise
 static const byte CloseDirection = 1; //Counter Clockwise
 
-Button openButton = Button("Open", OpenButton);
-Button closeButton = Button("Close", CloseButton);
-Button debugButton = Button("Debug", DebugButton);
+Pins pinsCollection;
 
-IR_Control remoteSensor = IR_Control("Remote Control", IR_Pin);
+Button openButton = Button("Open", pinsCollection.OpenButton);
+Button closeButton = Button("Close", pinsCollection.CloseButton);
+Button debugButton = Button("Debug", pinsCollection.DebugButton);
+
+IR_Control remoteSensor = IR_Control("Remote Control", pinsCollection.IR_Pin);
 
 StepperControl stepper = StepperControl();
 
+
 void setup()
 {
-  pinMode(OnBoardLED, OUTPUT);
+  pinMode(pinsCollection.OnBoardLED, OUTPUT);
 
   openButton.buttonSetup();
   closeButton.buttonSetup();
@@ -48,18 +49,19 @@ void setup()
 void loop()
 {
   int remoteButton;
-  digitalWrite(2, LOW);
-  
+  digitalWrite(pinsCollection.OnBoardLED, LOW);
+
   Serial.flush();
 
-  if(remoteSensor.IRHasRecievedData() == true){
+  if (remoteSensor.IRHasRecievedData() == true)
+  {
     remoteButton = remoteSensor.IR_Run();
     stepper.StepperRun(remoteButton);
   }
 
   if (openButton.IsButtonPress() == true)
   {
-    digitalWrite(2, HIGH);
+    digitalWrite(pinsCollection.OnBoardLED, HIGH);
     Serial.print("OPEN BUTTON: ");
     Serial.println("PRESSED!!");
     stepper.StepperRun(OpenDirection);
