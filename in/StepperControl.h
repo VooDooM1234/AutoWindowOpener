@@ -19,7 +19,7 @@ public:
     }
 
     void StepperSetup();
-    void StepperRun(byte direction);
+    void StepperRun(bool direction);
 
 
 };

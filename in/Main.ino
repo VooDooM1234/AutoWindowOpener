@@ -18,8 +18,8 @@
 
 static const int numButtons = 3;
 
-static const byte OpenDirection = 0;  //Clockwise
-static const byte CloseDirection = 1; //Counter Clockwise
+static const byte OpenDirection = true;  //Clockwise
+static const byte CloseDirection = false; //Counter Clockwise
 
 Pins pinsCollection;
 
@@ -39,6 +39,8 @@ void setup()
   openButton.buttonSetup();
   closeButton.buttonSetup();
   debugButton.buttonSetup();
+
+  stepper.StepperSetup();
 
   remoteSensor.IRSetup();
 
@@ -70,7 +72,7 @@ void loop()
 
   if (closeButton.IsButtonPress() == true)
   {
-    digitalWrite(2, HIGH);
+    digitalWrite(pinsCollection.OnBoardLED, HIGH);
     Serial.print("CLOSE BUTTON: ");
     Serial.println("PRESSED!!");
     stepper.StepperRun(CloseDirection);
@@ -78,7 +80,7 @@ void loop()
   }
   if (debugButton.IsButtonPress() == true)
   {
-    digitalWrite(2, HIGH);
+    digitalWrite(pinsCollection.OnBoardLED, HIGH);
     Serial.print("DEBUG: ");
     Serial.println("PRESSED!!");
     delay(1000);
