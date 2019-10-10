@@ -1,31 +1,26 @@
-#include <Stepper.h>
-
 #include "Esp.h"
 #include "StepperControl.h"
 #include "Pins.h"
 
-#define IN1 14 //GPIO 14
-#define IN2 12 //GPIO 12
-#define IN3 13 //GPIO 13
-#define IN4 15 //GPIO 15
-
 //32 steps per rev * gear ratio of 64:1 = 2038
-const int stepsPerRevolution = 2038;
-//speed in RPM
-const int speed = 60;
+const int stepsPerRevolution = 4096;
+//speed in steps approx 60 RPM
+// find out concersion rate
+const int speed = 900;
 //8 revolutions to open/close window
 const int windowRevolutions = 8;
 
-const int NBSTEPS = 4096;
-const int STEPTIME = 900;
+volatile int Step = 0;
 
 unsigned long lastTime = 0L;
-unsigned int count = 0L;
+
+unsigned int motorTime = 0L;
 
 String windowState = "";
 
 int arrayDefault[4] = {LOW, LOW, LOW, LOW};
 
+//Standard stepping matrix for 4 pin stepper motor
 int stepsMatrix[8][4] = {
     {LOW, LOW, LOW, HIGH},
     {LOW, LOW, HIGH, HIGH},
@@ -38,109 +33,115 @@ int stepsMatrix[8][4] = {
 };
 
 Pins motorPins;
-//Stepper myStepper(stepsPerRevolution, motorPins.MotorPin_1, motorPins.MotorPin_2, motorPins.MotorPin_3, motorPins.MotorPin_4);
 
 void StepperControl::StepperSetup()
 {
-  pinMode(IN1, OUTPUT);
-  pinMode(IN2, OUTPUT);
-  pinMode(IN3, OUTPUT);
-  pinMode(IN4, OUTPUT);
+  pinMode(motorPins.MotorPin_1, OUTPUT);
+  pinMode(motorPins.MotorPin_2, OUTPUT);
+  pinMode(motorPins.MotorPin_3, OUTPUT);
+  pinMode(motorPins.MotorPin_4, OUTPUT);
 }
 
 void writeStep(int outArray[4])
 {
-  digitalWrite(IN1, outArray[0]);
-  digitalWrite(IN2, outArray[1]);
-  digitalWrite(IN3, outArray[2]);
-  digitalWrite(IN4, outArray[3]);
+  digitalWrite(motorPins.MotorPin_1, outArray[0]);
+  digitalWrite(motorPins.MotorPin_2, outArray[1]);
+  digitalWrite(motorPins.MotorPin_3, outArray[2]);
+  digitalWrite(motorPins.MotorPin_4, outArray[3]);
 }
 
-void stepper()
+bool currentState(bool direction)
 {
 
-  unsigned long currentMicros;
-  int stepsLeft = NBSTEPS;
-  int Step = 0;
-  count = 0;
-  lastTime = micros();
-  Serial.println("Stepper");
-
-  while (stepsLeft > 0)
+  if (windowState != "open" && direction == true)
   {
-    //Serial.println("while");
-    currentMicros = micros();
-    if (currentMicros - lastTime >= STEPTIME)
-    {
-      if ((Step >= 0) && (Step < 8))
-      {
-        writeStep(stepsMatrix[Step]);
-        Serial.println("writing");
-      }
-      else
-      {
-        writeStep(arrayDefault);
-      }
-      count += micros() - lastTime;
-      lastTime = micros();
-      stepsLeft--;
-      Step++;
-    }
-    delay(1);
+    Serial.println("~~~~~OPENING~~~~~");
+    Serial.println("Wait...!");
+    windowState = "open";
+    return true;
+  }
+  else if (windowState == "open" && direction == true)
+  {
+    Serial.println("Already Open");
+    return false;
   }
 
-  delay(2000);
-  stepsLeft = NBSTEPS;
+  else if (windowState != "closed" && direction == false)
+  {
+
+    Serial.println("~~~~~CLOSING~~~~~");
+    Serial.println("Wait...!");
+    windowState = "closed";
+    return true;
+  }
+  else
+  {
+    Serial.println("Already Closed");
+    return false;
+  }
 }
 
-// void setDirection(bool direction)
-// {
-//   (direction == true) ? (Step++) : (Step--);
+void stepper(bool direction)
+{
 
-//   if (Step > 7)
-//   {
-//     Step = 0;
-//   }
-//   else if (Step < 0)
-//   {
-//     Step = 7;
-//   }
-// }
+  if ((Step >= 0) && (Step < 8))
+  {
+    //begin stepping
+    writeStep(stepsMatrix[Step]);
+  }
+  else
+  {
+    writeStep(arrayDefault);
+  }
+  //set direction of stepping based on pased direction val
+  (direction == true) ? (Step++) : (Step--);
+
+  if (Step > 7)
+  {
+    Step = 0;
+  }
+  else if (Step < 0)
+  {
+    Step = 7;
+  }
+}
 
 void StepperControl::StepperRun(bool direction)
 {
 
-  if (direction)
+  unsigned long currentMicros;
+  int stepsLeft = stepsPerRevolution;
+
+  motorTime = 0;
+  lastTime = micros();
+
+  if (currentState(direction) == true)
   {
-    if (windowState != "open")
-    {
-      Serial.println("~~~~~OPENING~~~~~");
 
-     // setDirection(direction);
-      Serial.println(direction);
-      stepper();
-
-      windowState = "open";
-      delay(10);
-    }
-    else
+    while (stepsLeft > 0)
     {
-      Serial.println("Already Open");
+      currentMicros = micros();
+
+      if (currentMicros - lastTime >= speed)
+      {
+
+        stepper(direction);
+        motorTime += micros() - lastTime;
+        lastTime = micros();
+        stepsLeft--;
+      }
+      delay(1);
     }
+
+    Serial.println(motorTime);
+
+    //delay(2000);
+
+    Serial.println("Complete!");
+    stepsLeft = stepsPerRevolution;
   }
-  else if (direction = 2)
+  else
   {
-    if (windowState != "closed")
-    {
-      // step one revolution in one direction:
-      Serial.println("~~~~~CLOSING~~~~~");
-
-      windowState = "closed";
-      delay(10);
-    }
-    else
-    {
-      Serial.println("Already Closed");
-    }
+    Serial.println("Error");
   }
 }
