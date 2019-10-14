@@ -1,36 +1,11 @@
+/*
+
+  
+
+*/
 #include "Esp.h"
 #include "StepperControl.h"
 #include "Pins.h"
-
-//32 steps per rev * gear ratio of 64:1 = 2038
-const int stepsPerRevolution = 4096;
-//speed in steps approx 60 RPM
-// find out concersion rate
-const int speed = 900;
-//8 revolutions to open/close window
-const int windowRevolutions = 8;
-
-volatile int Step = 0;
-
-unsigned long lastTime = 0L;
-
-unsigned int motorTime = 0L;
-
-String windowState = "";
-
-int arrayDefault[4] = {LOW, LOW, LOW, LOW};
-
-//Standard stepping matrix for 4 pin stepper motor
-int stepsMatrix[8][4] = {
-    {LOW, LOW, LOW, HIGH},
-    {LOW, LOW, HIGH, HIGH},
-    {LOW, LOW, HIGH, LOW},
-    {LOW, HIGH, HIGH, LOW},
-    {LOW, HIGH, LOW, LOW},
-    {HIGH, HIGH, LOW, LOW},
-    {HIGH, LOW, LOW, LOW},
-    {HIGH, LOW, LOW, HIGH},
-};
 
 Pins motorPins;
 
@@ -42,7 +17,7 @@ void StepperControl::StepperSetup()
   pinMode(motorPins.MotorPin_4, OUTPUT);
 }
 
-void writeStep(int outArray[4])
+void StepperControl::writeStep(int outArray[4])
 {
   digitalWrite(motorPins.MotorPin_1, outArray[0]);
   digitalWrite(motorPins.MotorPin_2, outArray[1]);
@@ -50,7 +25,7 @@ void writeStep(int outArray[4])
   digitalWrite(motorPins.MotorPin_4, outArray[3]);
 }
 
-bool currentState(bool direction)
+bool StepperControl::currentStateChecker(bool direction)
 {
 
   if (windowState != "open" && direction == true)
@@ -81,9 +56,8 @@ bool currentState(bool direction)
   }
 }
 
-void stepper(bool direction)
+void StepperControl::stepper(bool direction)
 {
-
   if ((Step >= 0) && (Step < 8))
   {
     //begin stepping
@@ -110,12 +84,13 @@ void StepperControl::StepperRun(bool direction)
 {
 
   unsigned long currentMicros;
-  int stepsLeft = stepsPerRevolution;
+  int stepsLeft = (stepsPerRevolution * windowRevolutions);
 
   motorTime = 0;
   lastTime = micros();
 
-  if (currentState(direction) == true)
+  // if current state and direction check passes
+  if (currentStateChecker(direction) == true)
   {
 
     while (stepsLeft > 0)

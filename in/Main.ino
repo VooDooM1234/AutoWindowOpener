@@ -21,11 +21,13 @@ static const int numButtons = 3;
 static const byte OpenDirection = true;   //Clockwise
 static const byte CloseDirection = false; //Counter Clockwise
 
+byte buffer = 0;
+
 Pins pinsCollection;
 
 Button openButton = Button("Open", pinsCollection.OpenButton);
 Button closeButton = Button("Close", pinsCollection.CloseButton);
-Button debugButton = Button("Debug", pinsCollection.DebugButton);
+//Button debugButton = Button("Debug", pinsCollection.DebugButton);
 
 IR_Control remoteSensor = IR_Control("Remote Control", pinsCollection.IR_Pin);
 
@@ -37,7 +39,9 @@ void setup()
 
   openButton.buttonSetup();
   closeButton.buttonSetup();
-  debugButton.buttonSetup();
+  //debugButton.buttonSetup();
+
+  attachInterrupt(digitalPinToInterrupt(pinsCollection.DebugButton), ISR, CHANGE);
 
   stepper.StepperSetup();
 
@@ -45,6 +49,7 @@ void setup()
 
   Serial.begin(115200);
   Serial.print("Sanity Test ");
+  delay(500);
 }
 
 void loop()
@@ -52,7 +57,6 @@ void loop()
   int remoteButton;
   digitalWrite(pinsCollection.OnBoardLED, LOW);
 
-  Serial.flush();
   //remote sensor data recived
   if (remoteSensor.IRHasRecievedData() == true)
   {
@@ -63,10 +67,15 @@ void loop()
   if (openButton.IsButtonPress() == true)
   {
     digitalWrite(pinsCollection.OnBoardLED, HIGH);
-    Serial.print("OPEN BUTTON: ");
-    Serial.println("PRESSED!!");
-    stepper.StepperRun(OpenDirection);
-    delay(1000);
+    //buffer for inistalisation of device clear buffer doesnt work natively on ESP for some reason
+    if (buffer != 0)
+    {
+      Serial.print("OPEN BUTTON: ");
+      Serial.println("PRESSED!!");
+      stepper.StepperRun(OpenDirection);
+    }
+    buffer++;
+    delay(100);
   }
   //close button data recieved
   if (closeButton.IsButtonPress() == true)
@@ -75,16 +84,23 @@ void loop()
     Serial.print("CLOSE BUTTON: ");
     Serial.println("PRESSED!!");
     stepper.StepperRun(CloseDirection);
-    delay(1000);
+    delay(100);
   }
-  if (debugButton.IsButtonPress() == true)
-  {
-    digitalWrite(pinsCollection.OnBoardLED, HIGH);
-    Serial.print("DEBUG: ");
-    Serial.println("PRESSED!!");
-    delay(1000);
-  }
+  // if (debugButton.IsButtonPress() == true)
+  // {
+  //   digitalWrite(pinsCollection.OnBoardLED, HIGH);
+  //   Serial.print("DEBUG: ");
+  //   Serial.println("PRESSED!!");
+  //   delay(100);
+  // }
   else
   {
   }
+}
+
+void ISR()
+{
+  Serial.println("Killing Program");
+  //kill program on debug
+  exit(0);
 }
