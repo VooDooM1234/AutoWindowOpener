@@ -1,9 +1,6 @@
-//#include <avr/sleep.h>
-
-//#include "Arduino.h"
 #include "Esp.h"
-//#include <list>
-/*
+
+/*  
 //  TO BE ADDED
 //  1.  ZEROING FOR MOTOR 
 //  2.  SLEEP MODE FOOR ESP
@@ -22,6 +19,8 @@ static const byte OpenDirection = true;   //Clockwise
 static const byte CloseDirection = false; //Counter Clockwise
 
 byte buffer = 0;
+//inistalisation of Interrupt service routine
+void ICACHE_RAM_ATTR IntCallback();
 
 Pins pinsCollection;
 
@@ -41,14 +40,14 @@ void setup()
   closeButton.buttonSetup();
   //debugButton.buttonSetup();
 
-  attachInterrupt(digitalPinToInterrupt(pinsCollection.DebugButton), ISR, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(pinsCollection.DebugButton), IntCallback, CHANGE);
 
   stepper.StepperSetup();
 
   remoteSensor.IRSetup();
 
   Serial.begin(115200);
-  Serial.print("Sanity Test ");
+  Serial.println("Sanity Test ");
   delay(500);
 }
 
@@ -98,9 +97,11 @@ void loop()
   }
 }
 
-void ISR()
+void IntCallback()
 {
   Serial.println("Killing Program");
-  //kill program on debug
-  exit(0);
+  while (openButton.IsButtonPress() != true && closeButton.IsButtonPress() != true)
+  {
+  }
+  Serial.println("Restarting...");
 }

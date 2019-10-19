@@ -38,7 +38,10 @@ private:
     //rpm can be increased at higher input voltages (5v to 12v)
     const int speed = 600;
 
-    int Step = 0;
+    const int endIndexOfStepMatrix = 7;
+    const int startIndexOfStepMatric = 0;
+    
+    int Step = 0; //
     unsigned long lastTime = 0L;
     unsigned int motorTime = 0L;
 

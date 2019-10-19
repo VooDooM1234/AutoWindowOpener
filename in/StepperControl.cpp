@@ -70,13 +70,15 @@ void StepperControl::stepper(bool direction)
   //set direction of stepping based on pased direction val
   (direction == true) ? (Step++) : (Step--);
 
-  if (Step > 7)
+  // if stepped through entire steps matrix reset steps to zero
+  if (Step > endIndexOfStepMatrix)
   {
-    Step = 0;
+    Step = startIndexOfStepMatric;
   }
-  else if (Step < 0)
+  //if stepped counter clockwise to -1 set step array to move backwards
+  else if (Step < startIndexOfStepMatric)
   {
-    Step = 7;
+    Step = endIndexOfStepMatrix;
   }
 }
 
@@ -108,9 +110,8 @@ void StepperControl::StepperRun(bool direction)
       delay(1);
     }
 
-    Serial.println(motorTime);
-
-    //delay(2000);
+    Serial.print(motorTime/1000);
+    Serial.println("Seconds");
 
     Serial.println("Complete!");
     stepsLeft = stepsPerRevolution;
