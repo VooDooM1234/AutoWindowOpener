@@ -1,7 +1,7 @@
-#define IN1 14 //GPIO 14
-#define IN2 12 //GPIO 12
-#define IN3 13 //GPIO 13
-#define IN4 15 //GPIO 15
+#define IN1 7 //GPIO 14
+#define IN2 5 //GPIO 12
+#define IN3 6 //GPIO 13
+#define IN4 4 //GPIO 15
 
 const int NBSTEPS = 4096;
 const int STEPTIME = 1000;

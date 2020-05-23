@@ -53,6 +53,8 @@ public:
     }
     void StepperSetup();
     void StepperRun(bool direction);
+
+    
 };
 
 //extern StepperControl stepperControl;

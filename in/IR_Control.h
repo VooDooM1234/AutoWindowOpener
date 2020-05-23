@@ -11,6 +11,7 @@ private:
 
     int pin;
     String name;
+    
 
 public:
     IR_Control(String name, int attachTo) : pin(attachTo)
@@ -20,6 +21,11 @@ public:
     void IRSetup();
     int IR_Run();
     bool IRHasRecievedData();
+
+    
+const uint8_t kTimeout = 15;
+const uint16_t kCaptureBufferSize = 1024;
+
     
 };
 

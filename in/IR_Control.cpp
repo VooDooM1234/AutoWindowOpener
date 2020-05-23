@@ -7,10 +7,7 @@
 #include <IRutils.h>
 #include <IRremoteESP8266.h>
 
-const uint8_t kTimeout = 15;
-const uint16_t kCaptureBufferSize = 1024;
-
-IRrecv irrecv(D5, kCaptureBufferSize, kTimeout, true);
+IRrecv irrecv(D5, 1024, 50, true);
 decode_results results;
 
 bool remoteState;
